@@ -85,6 +85,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with SingleTickerPr
                   onIncrease: () => _handleSemanticSwipe(1),
                   onDecrease: () => _handleSemanticSwipe(-1),
                   child: Stack(children: [
+                    Positioned(
+                      top: 40,
+                      left: 0,
+                      right: 0,
+                      child: Center(child: Image.asset(Images.logoWithName, height: 50)),
+                    ),
                     if(onBoardController.pageIndex != 3)
                       Positioned(
                         bottom: 0,

@@ -1,4 +1,4 @@
-package com.zerinexpress
+package zerinexpress.com
 
 import io.flutter.embedding.android.FlutterActivity
 
