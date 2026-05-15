@@ -4,8 +4,8 @@ import 'package:zerin_express/util/app_constants.dart';
 
 ThemeData darkTheme = ThemeData(
   fontFamily: AppConstants.fontFamily,
-  primaryColor: const Color(0xFF00735f),
-  primaryColorDark: const Color(0xff016655),
+  primaryColor: const Color(0xFFFF6B00),
+  primaryColorDark: const Color(0xFFE65100),
   disabledColor: const Color(0xFFBABFC4),
   scaffoldBackgroundColor: const Color(0xFF163935),
   canvasColor: const Color(0xFF1C1F1F),
@@ -20,10 +20,10 @@ ThemeData darkTheme = ThemeData(
     titleMedium: TextStyle(color: Color(0xff1D2D2B)),
   ),
   colorScheme: const ColorScheme.dark(
-    primary: Color(0xFF02B8A2),
+    primary: Color(0xFFFF6B00),
     error: Color(0xFFFF6767),
     surface: Color(0xFFF3F3F3),
-    secondary: Color(0xFF008C7B),
+    secondary: Color(0xFFFF6B00),
     tertiary: Color(0xFF7CCD8B),
     tertiaryContainer: Color(0xFFC98B3E),
     secondaryContainer: Color(0xFFEE6464),
@@ -42,7 +42,7 @@ ThemeData darkTheme = ThemeData(
     secondaryFixedDim: Color(0xff808080),
 
   ),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFF00735f))),
+  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: const Color(0xFFFF6B00))),
 
   extensions: <ThemeExtension<CustomThemeColors>>[
     CustomThemeColors.dark(),

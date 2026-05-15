@@ -5,8 +5,8 @@ import 'package:zerin_express/util/images.dart';
 
 class AppConstants {
   static const String appName = 'Zerin Express';
-  static const String baseUrl = 'YOUR_BASE_URL_HERE';
-  static const double appVersion = 3.1; /// Flutter SDK 3.41.4
+  static const String baseUrl = 'https://zerinexpress.com';
+  static const String appVersion = '1.0.0'; /// Zerin Express v1.0.0
   static const String fontFamily = 'SFProText';
   static const double coverageRadiusInMeter = 50;
   static const String configUri = '/api/customer/configuration';

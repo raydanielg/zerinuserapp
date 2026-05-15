@@ -28,14 +28,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with SingleTickerPr
   late AnimationController _controller;
   late Animation _animation;
 
-  final List<Widget> pages = AppConstants.onBoardPagerData.map((data) => PagerContent(
-    image: data.image,
-    text1: data.title1,
-    text2: data.title2,
-    text3: data.title3,
-    text4: data.title4,
-    index: AppConstants.onBoardPagerData.indexOf(data),
-  )).toList();
+  final List<Widget> pages = [];
 
 
   @override
@@ -73,95 +66,158 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(color: Theme.of(context).cardColor),
-          child: GetBuilder<OnBoardController>(builder: (onBoardController) {
-            return Column(children: [
-              Expanded(child: MergeSemantics(
-                child: Semantics(
-                  onIncrease: () => _handleSemanticSwipe(1),
-                  onDecrease: () => _handleSemanticSwipe(-1),
-                  child: Stack(children: [
-                    Positioned(
-                      top: 40,
-                      left: 0,
-                      right: 0,
-                      child: Center(child: Image.asset(Images.logoWithName, height: 50)),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: GetBuilder<OnBoardController>(builder: (onBoardController) {
+        return Stack(
+          children: [
+            // Top Image Section
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: Get.height * 0.6,
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: AppConstants.onBoardPagerData.length,
+                onPageChanged: (value) {
+                  onBoardController.onPageChanged(value);
+                  _controller.reset();
+                  _controller.forward();
+                },
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.all(Dimensions.paddingSizeExtraLarge),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppConstants.onBoardPagerData[index].image,
+                        width: Get.width * 0.8,
+                      ),
                     ),
-                    if(onBoardController.pageIndex != 3)
-                      Positioned(
-                        bottom: 0,
-                        child: SvgPicture.asset(Images.backgroundFrame, width: Get.width),
-                      ),
+                  );
+                },
+              ),
+            ),
 
-                      if(onBoardController.pageIndex != 3) Positioned(bottom: 100, right: 0, left: -100, child: SizedBox(
-                        width: 1200,
-                        height: (onBoardController.pageIndex != 1 ? (Get.height * 0.2) : 0) + (300 * double.tryParse(_animation.value.toString())!),
-                        child: SvgPicture.asset(
-                            Images.splashSvgBackground,
-                            alignment: onBoardController.pageIndex == 0
-                                ? Alignment.centerLeft
-                                : onBoardController.pageIndex == 1
-                                ? Alignment.centerRight
-                                : Alignment.center,
+            // Bottom Content Section
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: Get.height * 0.45,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha:0.05),
+                      blurRadius: 20,
+                      offset: const Offset(0, -10),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    // Logo at the top of content
+                    Image.asset(Images.logoWithName, height: 40),
+                    const SizedBox(height: 30),
+                    
+                    // Titles
+                    SizedBox(
+                      height: 100,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: AppConstants.onBoardPagerData[onBoardController.pageIndex].title1 + " ",
+                              style: textBold.copyWith(fontSize: 26, color: Colors.black87),
+                            ),
+                            TextSpan(
+                              text: AppConstants.onBoardPagerData[onBoardController.pageIndex].title2,
+                              style: textBold.copyWith(fontSize: 26, color: Theme.of(context).primaryColor),
+                            ),
+                            TextSpan(
+                              text: "\n" + AppConstants.onBoardPagerData[onBoardController.pageIndex].title3,
+                              style: textRegular.copyWith(fontSize: 16, color: Colors.black54),
+                            ),
+                          ],
                         ),
-                      )),
-
-                      PageView(
-                        controller: _pageController,
-                        children: pages,
-                        onPageChanged: (value) {
-                          onBoardController.onPageChanged(value);
-                          _controller.reset(); // Reset the animation to start over
-                          _controller.forward(); // Start the animation
-                        },
                       ),
+                    ),
+                    
+                    const Spacer(),
 
-                  ]),
-                ),
-              )),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
+                    // Indicators and Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Dots
+                        Row(
+                          children: List.generate(
+                            AppConstants.onBoardPagerData.length,
+                            (index) => AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              margin: const EdgeInsets.only(right: 8),
+                              height: 8,
+                              width: index == onBoardController.pageIndex ? 24 : 8,
+                              decoration: BoxDecoration(
+                                color: index == onBoardController.pageIndex 
+                                    ? Theme.of(context).primaryColor 
+                                    : Theme.of(context).primaryColor.withValues(alpha:0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ),
 
-              SizedBox(
-                height: 20,
-                child: ListView.separated(
-                  itemCount: AppConstants.onBoardPagerData.length,
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemBuilder: (ctx, index){
-                    return Container(
-                        height: Dimensions.paddingSizeExtraSmall, width: Dimensions.paddingSizeExtraSmall,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: index == onBoardController.pageIndex ? Theme.of(context).primaryColor : Theme.of(context).hintColor
-                      ),
-                    );
-                  },
-                  separatorBuilder: (ctx, index){
-                    return const SizedBox(width: Dimensions.paddingSizeExtraSmall);
-                  },
+                        // Action Button
+                        onBoardController.pageIndex == 3
+                            ? _GetStartedButtonWidget(notificationData: widget.notificationData)
+                            : FloatingActionButton(
+                                onPressed: () {
+                                  _pageController.nextPage(
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                                backgroundColor: Theme.of(context).primaryColor,
+                                child: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+                              ),
+                      ],
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ),
-              const SizedBox(height: Dimensions.paddingSizeSmall),
-
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 600),
-                child: onBoardController.pageIndex == 3
-                    ? _GetStartedButtonWidget(notificationData: widget.notificationData)
-                    : _NavigationButtonWidget(pageController: _pageController, notificationData: widget.notificationData),
+            ),
+            
+            // Skip button at top right
+            Positioned(
+              top: 50,
+              right: 20,
+              child: TextButton(
+                onPressed: () {
+                  Get.find<ConfigController>().disableIntro();
+                  _checkNavigationRoute(widget.notificationData);
+                },
+                child: Text(
+                  'skip'.tr,
+                  style: textMedium.copyWith(color: Colors.black45),
+                ),
               ),
-              const SizedBox(height: Dimensions.paddingSizeDefault),
-
-            ]);
-          }),
-        ),
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
-
 }
 
 class _GetStartedButtonWidget extends StatelessWidget {
@@ -170,19 +226,19 @@ class _GetStartedButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 180,
-      child: ButtonWidget(
-        textColor: Theme.of(context).cardColor,
-        showBorder: true,
-        radius: 100,
-        borderColor: Theme.of(context).primaryColor.withValues(alpha:0.5),
-        buttonText: 'get_started'.tr,
-        onPressed: () {
-          Get.find<ConfigController>().disableIntro();
-          _checkNavigationRoute(notificationData);
-        },
+    return ElevatedButton(
+      onPressed: () {
+        Get.find<ConfigController>().disableIntro();
+        _checkNavigationRoute(notificationData);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 0,
       ),
+      child: Text('get_started'.tr, style: textBold.copyWith(fontSize: 16)),
     );
   }
 }
@@ -211,7 +267,7 @@ class _NavigationButtonWidget extends StatelessWidget {
             Get.find<ConfigController>().disableIntro();
             _checkNavigationRoute(notificationData);
           },
-          child: Text('skip'.tr, style: textMedium.copyWith(fontSize: Dimensions.fontSizeDefault)),
+          child: Text('skip'.tr, style: textMedium.copyWith(fontSize: Dimensions.fontSizeDefault, color: Colors.white.withValues(alpha:0.7))),
         ),
 
       const Spacer(),
@@ -229,12 +285,18 @@ class _NavigationButtonWidget extends StatelessWidget {
           }
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault, vertical: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(Dimensions.paddingSizeDefault)
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100)
           ),
-          child: Icon(Icons.arrow_forward_rounded, color: Theme.of(context).cardColor),
+          child: Row(
+            children: [
+              Text('next'.tr, style: textBold.copyWith(color: Theme.of(context).primaryColor)),
+              const SizedBox(width: 8),
+              Icon(Icons.arrow_forward_rounded, color: Theme.of(context).primaryColor, size: 18),
+            ],
+          ),
         ),
       ),
       const SizedBox(width: Dimensions.paddingSizeExtraLarge),

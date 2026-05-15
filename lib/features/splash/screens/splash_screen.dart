@@ -20,20 +20,24 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   StreamSubscription<List<ConnectivityResult>>? _onConnectivityChanged;
   late AnimationController _controller;
   late Animation _animation;
+  late Animation _scaleAnimation;
 
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_controller)
-      ..addListener(() {
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _animation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    )..addListener(() {
         setState(() {});
       });
 
+    _scaleAnimation = Tween(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
 
-    _controller.repeat(max: 1);
     _controller.forward();
 
     Get.find<ConfigController>().initSharedData();
@@ -82,31 +86,61 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(color: Theme.of(context).cardColor),
-        alignment: Alignment.bottomCenter,
-        child: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.end, children: [
-
-          Stack(alignment: AlignmentDirectional.bottomCenter, children: [
-
-            Container(
-              transform: Matrix4.translationValues(0, 320 - (320 * double.tryParse(_animation.value.toString())!), 0),
-              child: Column(children: [
-                Opacity(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFFF6B00),
+              Color(0xFFFF8C00),
+              Color(0xFFFFA500),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              Transform.scale(
+                scale: _scaleAnimation.value,
+                child: Opacity(
                   opacity: _animation.value,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 120 - ((120 * double.tryParse(_animation.value.toString())!))),
-                    child: Image.asset(Images.logoWithName, height: 100),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha:0.2),
+                          blurRadius: 30,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(Images.logoWithName, height: 120),
                   ),
                 ),
-                SizedBox(height: Get.height * 0.25),
-                
-                SvgPicture.asset(Images.splashSvgBackground)
-              ]),
-            ),
-
-          ]),
-
-        ]),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 60),
+                child: Opacity(
+                  opacity: _animation.value,
+                  child: const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 3,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -19,7 +19,7 @@ class PagerContent extends StatelessWidget {
   Widget build(BuildContext context) {
     if(index != 3) {
       return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Spacer(),
 
@@ -27,68 +27,105 @@ class PagerContent extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.25,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge),
-              child: RichText(text: TextSpan(
-                  children: [
-                    TextSpan(text: text1, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).primaryColor)),
-                    TextSpan(text: text2, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).textTheme.bodyMedium?.color)),
-                    TextSpan(text: text3, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).primaryColor)),
-                    TextSpan(text: text4, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).textTheme.bodyMedium?.color)),
-                  ]
-              ))
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(text: text1, style: textBold.copyWith(fontSize: 32, color: Colors.white)),
+                        TextSpan(text: text2, style: textBold.copyWith(fontSize: 32, color: Colors.white.withValues(alpha:0.8))),
+                        TextSpan(text: text3, style: textBold.copyWith(fontSize: 32, color: Colors.white)),
+                        TextSpan(text: text4, style: textBold.copyWith(fontSize: 32, color: Colors.white.withValues(alpha:0.8))),
+                      ]
+                    )
+                  ),
+                  const SizedBox(height: Dimensions.paddingSizeDefault),
+                  Container(
+                    width: 50,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ],
+              )
             ),
           ),
 
           const Spacer(),
 
-          Padding(
-            padding: EdgeInsets.only(left: index == 1 ? Dimensions.paddingSizeSmall : 0),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha:0.1),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                )
+              ]
+            ),
             child: FutureBuilder<String>(
-                future: loadSvgAndChangeColors(image, Theme.of(context).primaryColor),
+                future: loadSvgAndChangeColors(image, Colors.white),
                 builder: (context, snapshot){
                   if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
                     return SvgPicture.string(
-                      snapshot.data!, width: Get.width,
+                      snapshot.data!, width: Get.width * 0.8,
                     );
                   }
-                  return SvgPicture.asset(image, width: Get.width);
+                  return SvgPicture.asset(image, width: Get.width * 0.8);
                 }
             ),
           ),
 
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05)
+          SizedBox(height: MediaQuery.of(context).size.height * 0.1)
         ],
       );
     }
 
      return Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
+       crossAxisAlignment: CrossAxisAlignment.center,
        children: [
-         SizedBox(height: Get.height * 0.03),
-
-         FutureBuilder<String>(
-             future: loadSvgAndChangeColors(image, Theme.of(context).primaryColor),
-             builder: (context, snapshot){
-               if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                 return SvgPicture.string(
-                     snapshot.data!
-                 );
+         const Spacer(),
+         
+         Container(
+           padding: const EdgeInsets.all(20),
+           decoration: BoxDecoration(
+             color: Colors.white.withValues(alpha:0.1),
+             shape: BoxShape.circle,
+           ),
+           child: FutureBuilder<String>(
+               future: loadSvgAndChangeColors(image, Colors.white),
+               builder: (context, snapshot){
+                 if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                   return SvgPicture.string(
+                       snapshot.data!,
+                       width: 200,
+                   );
+                 }
+                 return const SizedBox(height: 150, child: Center(child: CircularProgressIndicator(color: Colors.white)));
                }
-               return const SizedBox(height: 150, child: Center(child: CircularProgressIndicator()));
-             }
+           ),
          ),
-         const SizedBox(height: Dimensions.paddingSizeExtraLarge),
+         const SizedBox(height: Dimensions.paddingSizeOverLarge),
 
          Padding(
            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraLarge),
-           child: RichText(text: TextSpan(
+           child: RichText(
+             textAlign: TextAlign.center,
+             text: TextSpan(
                children: [
-                 TextSpan(text: text1, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).primaryColor)),
-                 TextSpan(text: text2, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).textTheme.bodyMedium?.color)),
-                 TextSpan(text: text3, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).primaryColor)),
-                 TextSpan(text: text4, style: textMedium.copyWith(fontSize: 30, color: Theme.of(context).textTheme.bodyMedium?.color)),
+                 TextSpan(text: text1, style: textBold.copyWith(fontSize: 32, color: Colors.white)),
+                 TextSpan(text: text2, style: textBold.copyWith(fontSize: 32, color: Colors.white.withValues(alpha:0.8))),
+                 TextSpan(text: text3, style: textBold.copyWith(fontSize: 32, color: Colors.white)),
+                 TextSpan(text: text4, style: textBold.copyWith(fontSize: 32, color: Colors.white.withValues(alpha:0.8))),
                ]
            )),
          ),
+         const Spacer(),
 
        ],
      );
