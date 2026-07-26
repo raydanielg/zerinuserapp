@@ -328,9 +328,9 @@ class NotificationHelper {
       htmlFormatContentTitle: true,
     );
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'hexaride',
-      'hexaride',
-      channelDescription: 'progress channel description',
+      'zerin_express',
+      'Zerin Express',
+      channelDescription: 'Zerin Express notifications',
       styleInformation: bigTextStyleInformation,
       channelShowBadge: true,
       importance: Importance.max,
@@ -353,11 +353,7 @@ class NotificationHelper {
     String title = message.data['title'];
     String body = message.data['body'];
     String? orderID = message.data['order_id'];
-    String? image = (message.data['image'] != null && message.data['image'].isNotEmpty) ?
-    message.data['image'].startsWith('http') ?
-    message.data['image'] :
-    '${AppConstants.baseUrl}/storage/app/public/notification/${message.data['image']}' :
-    null;
+    String? image = null;
 
     try {
       await showBigPictureNotificationHiddenLargeIcon(title, body, orderID, image, fln);
@@ -392,8 +388,8 @@ class NotificationHelper {
       );
     }
     final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'hexaride',
-      'hexaride',
+      'zerin_express',
+      'Zerin Express',
       priority: Priority.max,
       importance: Importance.max,
       playSound: true,

@@ -22,17 +22,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   try {
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: "AIzaSyAg0pkKGzrJcSRv-uWI82JrzSJvyz1h_bY",
-          appId: "1:56442076502:android:4e9ab51b5949b147b96af7",
-          messagingSenderId: "56442076502",
-          projectId: "zerinexpress-1401c",
-          storageBucket: "zerinexpress-1401c.appspot.com",
-        ),
-      );
-    }
+    await Firebase.initializeApp();
+    debugPrint('Firebase initialized successfully');
   } catch (e) {
     debugPrint('Firebase init error: $e');
   }

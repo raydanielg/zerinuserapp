@@ -7,7 +7,7 @@ class AppConstants {
   static const String appName = 'Zerin Express';
   static const String baseUrl = 'https://zerinexpress.com';
   static const String configUri = '/api/customer/configuration';
-  static const String appVersion = '1.0.2';
+  static const String appVersion = '1.0.4';
   static const String fontFamily = 'SFProText';
   static const bool configFromBackend = true;
   static const String mapApiKeyClient = 'AIzaSyAo76Ccy2qHIoOURyn9hIN0ahjJ6OgNc3U';

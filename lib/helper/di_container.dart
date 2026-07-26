@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:zerin_express/features/address/domain/repositories/address_repository_interface.dart';
 import 'package:zerin_express/features/address/domain/services/address_service.dart';
@@ -288,14 +289,38 @@ Future<Map<String, Map<String, String>>> init() async {
 
   // Retrieving localized data
   Map<String, Map<String, String>> languages = {};
-  for(LanguageModel languageModel in AppConstants.languages) {
-    String jsonStringValues =  await rootBundle.loadString('assets/language/${languageModel.languageCode}.json');
-    Map<String, dynamic> mappedJson = json.decode(jsonStringValues);
-    Map<String, String> languageJson = {};
-    mappedJson.forEach((key, value) {
-      languageJson[key] = value.toString();
-    });
-    languages['${languageModel.languageCode}_${languageModel.countryCode}'] = languageJson;
+  try {
+    for(LanguageModel languageModel in AppConstants.languages) {
+      try {
+        String jsonStringValues = await rootBundle.loadString('assets/language/${languageModel.languageCode}.json');
+        Map<String, dynamic> mappedJson = json.decode(jsonStringValues);
+        Map<String, String> languageJson = {};
+        mappedJson.forEach((key, value) {
+          languageJson[key] = value.toString();
+        });
+        languages['${languageModel.languageCode}_${languageModel.countryCode}'] = languageJson;
+      } catch (e) {
+        debugPrint('Error loading language file for ${languageModel.languageCode}: $e');
+      }
+    }
+  } catch (e) {
+    debugPrint('Error loading languages: $e');
   }
+  
+  // Fallback to English if no languages loaded
+  if (languages.isEmpty) {
+    try {
+      String jsonStringValues = await rootBundle.loadString('assets/language/en.json');
+      Map<String, dynamic> mappedJson = json.decode(jsonStringValues);
+      Map<String, String> languageJson = {};
+      mappedJson.forEach((key, value) {
+        languageJson[key] = value.toString();
+      });
+      languages['en_US'] = languageJson;
+    } catch (e) {
+      debugPrint('Error loading fallback language: $e');
+    }
+  }
+  
   return languages;
 }
